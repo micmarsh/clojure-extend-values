@@ -1,10 +1,10 @@
 (ns extend-values.extend
   (:refer-clojure :exclude [extend-type])
-  (:require [clojure.core.match :refer [match]]))
+  (:require [#?@(:clj [clojure.core.match :refer] :cljs [cljs.core.match :refer-macros]) [match]]))
 
 (def code-storage
-  "{Class {Protocol {'fn-name {value {[args] (code ...) ...} 
-                               value2 {[args] (code ...) ...}}}}}"
+  "{Class {Protocol {'fn-name {[args] {value (code ...) ...}}}}}
+   (see below for somewhat more detail"
   (atom {}))
 
 (defn merge-recursive [& maps]
@@ -56,7 +56,10 @@
        (mapcat (fn [[p map]] [p (build-mmap map)]))))
 
 (defmacro extend-type [value & specs]
-  `(clojure.core/extend ~(class value) ~@(emit-mmaps value specs)))
+  `(clojure.core/extend ~(#?(:clj class :cljs type) value) ~@(emit-mmaps value specs)))
+;; TODO cljs-ify!
+;; https://github.com/clojure/clojurescript/blob/master/src/main/clojure/cljs/core.cljc#L1537
+;; https://github.com/clojure/clojurescript/wiki/Differences-from-Clojure#protocols
 
 ;; Re-write!
 ;; * needs to utilize atom to account for multiple calls
@@ -69,15 +72,13 @@
 ;; * though of core match issue: don't have any way of dealing w/
 ;; core.match order. Maybe it doesn't matter (other than catch-all
 ;; symbol at bottom)
+;; Better Idea
+;;  * first thing: write test for how it "works" now
+;;  * cljs-ify both this and said test to make sure everything's nice
+;;  * then can move onto some TDD: write a test for some behavior from
+;;  above, watch it fail, fix it.
 
 (comment
-
-  (defprotocol Protocol 
-    (p-stuff [x])
-    (moar-p-stuff [x] [x y]))
-
-  (defn unset-proto [proto atype]
-    (-reset-methods (alter-var-root (:var proto) update :impls dissoc atype)))
   
   (clojure.core/extend-type java.lang.String 
     Protocol 
@@ -89,7 +90,8 @@
   (extend-type "hello world"
     Protocol
     (p-stuff [x] "boom, hotness") 
-    (moar-p-stuff ([x] "single arg moar hotness") 
+    (moar-p-stuff 
+      ([x] "single arg moar hotness") 
       ([x y] "double arg moar hotness")))
 
   (extend-type {:person/type :person/the-best}

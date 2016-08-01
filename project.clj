@@ -4,4 +4,10 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.9.0-alpha10"]
-                 [org.clojure/core.match "0.3.0-alpha4"]])
+                 [org.clojure/core.match "0.3.0-alpha4"]]
+  :profiles {:dev {:dependencies [[org.clojure/clojurescript "1.9.89"]]
+                   :plugins [[lein-cljsbuild "1.1.3"]]
+                   :cljsbuild {:builds [{:source-paths ["src"]
+                                         :compiler {:output-to "resources/cljs_out.js"
+                                                    :optimizations :none
+                                                    :pretty-print true}}]}}})
