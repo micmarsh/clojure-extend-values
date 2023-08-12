@@ -41,4 +41,12 @@
                           (moar-p-stuff "hello")))
     (is (thrown-with-msg? clojure.lang.ExceptionInfo #"No normal impl"
                           (moar-p-stuff "hello" "world"))))
-  )
+  (extend-type "hello"
+    Protocol
+    (p-stuff [x] "one")
+    (moar-p-stuff ([x] "two") ([x y] "three")))
+
+
+  (testing "Doesn't override old values over multiple calls")
+  (is (= "one" (p-stuff "hello")))
+  (is (= "p-stuff hello world" (p-stuff "hello world"))))
