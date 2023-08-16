@@ -28,7 +28,7 @@ To illustrate with an extension of [an example in Clojure's own documentation](h
 
   {:qty _} (subtotal [x] (throw (Exception. "Unknown fruit type or non-fruit data"))))
 ```
-Terrible data modeling practices aside, hopefully the above communicates the intent. All we currently (as of 8/12/23) have is a poor implementation of `extend-type`
+Terrible data modeling practices aside, hopefully the above communicates the intent. This may end up not having any real use cases that multimethods couldn't handle in a more simple and idiomatic manner. All we currently (as of 8/12/23) have is a poor implementation of `extend-type`
 
 ## Usage
 "Usage" may be a bit of a strong term, but `lein test` can be run to illustrate how `extend-type` works for a single value of a type, and has a long way to go to be helpful in any applicaiton.
