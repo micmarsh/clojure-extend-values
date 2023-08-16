@@ -2,7 +2,7 @@
 
 A Clojure library eventually intended to provide new versions of  `extend-type` and `extend-protocol` that work in terms of arbitrary values, rather than JVM (or JavaScript) types.
 
-To illustrate with an extension of [an example of Clojure's documentation](https://clojuredocs.org/clojure.core/extend-type#example-542692cbc026201cdc326bc2)
+To illustrate with an extension of [an example in Clojure's own documentation](https://clojuredocs.org/clojure.core/extend-type#example-542692cbc026201cdc326bc2)
 ```clojure
 
 (defrecord Banana [qty])
